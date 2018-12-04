@@ -7,9 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'recipe-book';
-  currentPage = 'recipes';
-
-  toggleCurrentPage(event) {
-    this.currentPage = event;
-  }
 }
