@@ -1,14 +1,15 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {Recipe} from './recipe.model';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
+import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class RecipeService {
-  recipeSelected = new EventEmitter<Recipe>();
+  recipesChanged = new Subject<Recipe[]>();
 
   // @ts-ignore
   private recipes: Recipe[] = [
@@ -18,8 +19,8 @@ export class RecipeService {
       'https://images.matprat.no/z74n564tu4-jumbotron/xsmall',
       [
         new Ingredient('Beef mince', 1),
-        new Ingredient('Ground coriander', 0.5),
-        new Ingredient('Ground coriander', 0.5),
+        new Ingredient('Ground coriander', 2),
+        new Ingredient('Ground coriander', 3),
       ]
     ),
     new Recipe(
@@ -27,9 +28,9 @@ export class RecipeService {
       'Cinnamon sugar sweet potato fries with caramel dipping sauce',
       'https://cdn.bluefoot.com/starvin/images/Sweet-Potato-Fries/sweet-potato-caramel-drizzle.png',
       [
-        new Ingredient('Salt', 0.05),
-        new Ingredient('Potatoes', 2),
-        new Ingredient('Sunflower oil', 0.2),
+        new Ingredient('Salt', 2),
+        new Ingredient('Potatoes', 1),
+        new Ingredient('Sunflower oil', 3),
       ]
     )
   ];
@@ -46,5 +47,20 @@ export class RecipeService {
 
   addIngredientsToShList(ingredients) {
     this.shoppingListService.addIngredients(ingredients);
+  }
+
+  updateRecipe(id: number, recipe: Recipe) {
+    this.recipes[id] = recipe;
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  deleteRecipe(id) {
+    this.recipes.splice(id, 1);
+    this.recipesChanged.next(this.recipes.slice());
   }
 }
