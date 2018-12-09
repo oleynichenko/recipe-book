@@ -3,6 +3,7 @@ import {Recipe} from './recipe.model';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import {Subject} from 'rxjs';
+import {referenceToExpression} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,11 @@ export class RecipeService {
   ];
 
   constructor(private shoppingListService:  ShoppingListService) {}
+
+  setRecipes(recipes) {
+    this.recipes = recipes;
+    this.recipesChanged.next(this.recipes.slice());
+  }
 
   getRecipes() {
     return this.recipes.slice();
